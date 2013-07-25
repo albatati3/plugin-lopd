@@ -114,11 +114,26 @@ Plugin update URI: lopd
         return $row;
     }
 
+    function lopd_footer() {
+        if(Params::getParam('page')=='register' && Params::getParam('action')=='register') { ?>
+            <script>
+                $(document).ready(function(){
+                    $("#lopd_box").rules("add", {required: true, messages: { required: "<?php _e('Es obligatorio aceptar las condiciones de uso', 'lopd'); ?>" }});
+                    $("#lopd_page").dialog({
+                        width: '80%',
+                        autoOpen: false,
+                        modal: true
+                    });
+                });
+            </script>
+        <?php
+        }
+    }
+
     /**
      * ADD ROUTES (VERSION 3.2+)
      */
     osc_add_route('lopd-help', 'lopd/help', 'lopd/help', osc_plugin_folder(__FILE__).'admin/help.php');
-    osc_add_route('lopd-user', 'lopd/user', 'lopd/user', osc_plugin_folder(__FILE__).'user_menu.php');
     osc_add_route('lopd-accept', 'lopd/accept', 'lopd/accept', osc_plugin_folder(__FILE__).'accept_lopd.php');
     osc_add_route('lopd-action', 'lopd/action', 'lopd/action', osc_plugin_folder(__FILE__).'admin/action.php');
 
@@ -135,7 +150,6 @@ Plugin update URI: lopd
     osc_add_hook('user_register_completed', 'lopd_save');
     osc_add_hook('before_user_register', 'lopd_before_register');
 
-    osc_add_hook('user_menu', 'lopd_user_menu');
     osc_add_hook('delete_user', 'lopd_delete_user');
 
     osc_add_hook('admin_items_table', 'lopd_table_columns');
@@ -143,5 +157,7 @@ Plugin update URI: lopd
 
     osc_add_hook('admin_menu_init', 'lopd_admin_menu');
     osc_add_hook('init', 'lopd_init');
-    
+
+    osc_add_hook('footer', 'lopd_footer');
+
 ?>
